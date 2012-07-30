@@ -30,13 +30,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.InputFormat;
 import org.apache.hadoop.mapred.OutputFormat;
 import org.apache.hadoop.util.StringUtils;
 
+import org.apache.hadoop.hive.ql.metadata.HiveException;
+import org.apache.hadoop.hive.ql.security.authorization.DefaultHiveAuthorizationProvider;
+import org.apache.hadoop.hive.ql.security.authorization.HiveAuthorizationProvider;
 import org.apache.hadoop.hive.metastore.HiveMetaHook;
 import org.apache.hadoop.hive.metastore.MetaStoreUtils;
 import org.apache.hadoop.hive.metastore.api.Constants;
@@ -239,7 +240,7 @@ public class HTStorageHandler
     mConf = conf;
   }
 
-  @Override
+  @Deprecated
   public void configureTableJobProperties(
     TableDesc tableDesc,
     Map<String, String> jobProperties) {
@@ -268,4 +269,67 @@ public class HTStorageHandler
 
     jobProperties.put(RowOutputFormat.TABLE, tableName);
   }
+
+  @Override
+  public void configureInputJobProperties(TableDesc tableDesc,
+					  Map<String, String> jobProperties) {
+    Properties tableProperties = tableDesc.getProperties();
+
+    jobProperties.put(
+      HTSerDe.HT_COL_MAPPING,
+      tableProperties.getProperty(HTSerDe.HT_COL_MAPPING));
+
+    String namespace =
+      tableProperties.getProperty(HTSerDe.HT_NAMESPACE);
+    if (namespace == null) {
+      namespace = tableProperties.getProperty(Constants.META_TABLE_DB);
+    }
+    jobProperties.put(HTSerDe.HT_NAMESPACE, namespace);
+    jobProperties.put(RowOutputFormat.NAMESPACE, namespace);
+
+    String tableName =
+      tableProperties.getProperty(HTSerDe.HT_TABLE_NAME);
+    if (tableName == null) {
+      tableName =
+        tableProperties.getProperty(Constants.META_TABLE_NAME);
+    }
+    jobProperties.put(HTSerDe.HT_TABLE_NAME, tableName);
+
+    jobProperties.put(RowOutputFormat.TABLE, tableName);
+  }
+
+  @Override
+  public void configureOutputJobProperties(TableDesc tableDesc,
+					   Map<String, String> jobProperties) {
+    Properties tableProperties = tableDesc.getProperties();
+
+    jobProperties.put(
+      HTSerDe.HT_COL_MAPPING,
+      tableProperties.getProperty(HTSerDe.HT_COL_MAPPING));
+
+    String namespace =
+      tableProperties.getProperty(HTSerDe.HT_NAMESPACE);
+    if (namespace == null) {
+      namespace = tableProperties.getProperty(Constants.META_TABLE_DB);
+    }
+    jobProperties.put(HTSerDe.HT_NAMESPACE, namespace);
+    jobProperties.put(RowOutputFormat.NAMESPACE, namespace);
+
+    String tableName =
+      tableProperties.getProperty(HTSerDe.HT_TABLE_NAME);
+    if (tableName == null) {
+      tableName =
+        tableProperties.getProperty(Constants.META_TABLE_NAME);
+    }
+    jobProperties.put(HTSerDe.HT_TABLE_NAME, tableName);
+
+    jobProperties.put(RowOutputFormat.TABLE, tableName);
+  }
+
+  @Override
+  public HiveAuthorizationProvider getAuthorizationProvider()
+      throws HiveException {
+      return new DefaultHiveAuthorizationProvider();
+  }
+
 }

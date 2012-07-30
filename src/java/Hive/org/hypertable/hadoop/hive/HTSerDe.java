@@ -42,6 +42,7 @@ import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.ByteStream;
 import org.apache.hadoop.hive.serde2.SerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
+import org.apache.hadoop.hive.serde2.SerDeStats;
 import org.apache.hadoop.hive.serde2.SerDeUtils;
 import org.apache.hadoop.hive.serde2.lazy.LazyFactory;
 import org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe;
@@ -77,6 +78,7 @@ public class HTSerDe implements SerDe {
   public static final Log LOG = LogFactory.getLog(HTSerDe.class.getName());
 
   private ObjectInspector cachedObjectInspector;
+  private SerDeStats serDeStats;
   private LazyHTRow cachedHTRow;
   private Row serializeCache;
 
@@ -358,6 +360,11 @@ public class HTSerDe implements SerDe {
   @Override
   public ObjectInspector getObjectInspector() throws SerDeException {
     return cachedObjectInspector;
+  }
+
+  @Override
+  public SerDeStats getSerDeStats() {
+      return serDeStats;
   }
 
   @Override
