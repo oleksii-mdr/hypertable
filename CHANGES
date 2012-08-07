@@ -1,3 +1,29 @@
+Version 0.9.6.1:
+(2012-08-10)
+
+    PageArena improvements for low-memory systems
+    issue 908: Fixed IndexOutOfBoundsException in DiscreteRandomGenerator
+    Don't link against tcmalloc on mac
+    Don't sort block index on load (was causing out-of-order problem on equal keys)
+    Added csvalidate
+    Changes to support Boost 1.50
+    Added Scrooge installation commands to build-setup scripts
+    Don't include libunwind on 32-bit platforms
+    Removed version verification check
+    Fixed FileBlockCache to handle large (> 4GB) CellStore files
+    issue 895: Fixed apache_log_load example
+    issue 885: BytesWritable writes trailing garbage back to Hypertable
+    Support for multiple column predicate added, new op CONTAINS added, bug fixes
+    Crash fixed if cell buffer grows
+    Got rid of build.xml warnings
+    issue 892: Fixed intermittend data loss in balancing-mechanics test
+    Added process ID to valgrind filename
+    Fixed open problem with MapR broker
+    Fixed two tests
+    issue 880: increased logging output in case of errors
+    Fixed build issues on 32-bit and mac
+
+
 Version 0.9.6.0:
 (2012-07-23)
 
