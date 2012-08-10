@@ -106,6 +106,10 @@ add_library(Hypertable ${Hypertable_SRCS})
 add_dependencies(Hypertable HyperComm Hyperspace HyperCommon)
 target_link_libraries(Hypertable ${EXPAT_LIBRARIES} Hyperspace HyperDfsBroker ${MALLOC_LIBRARY} HyperThirdParty)
 
+# test_parser
+add_executable(test_parser tests/test_parser.cc)
+target_link_libraries(test_parser Hypertable)
+
 # generate_test_data
 add_executable(generate_test_data generate_test_data.cc)
 target_link_libraries(generate_test_data Hypertable)
@@ -280,6 +284,8 @@ if (NOT HT_COMPONENT_INSTALL)
 
   install(FILES ${HEADERS}
       DESTINATION include/Hypertable/Lib)
+  install(TARGETS test_parser
+      RUNTIME DESTINATION bin)
   install(TARGETS generate_test_data
       RUNTIME DESTINATION bin)
   install(TARGETS Hypertable
